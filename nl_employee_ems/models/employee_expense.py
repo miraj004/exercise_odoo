@@ -34,6 +34,19 @@ class EmployeeExpense(models.Model):
     approved_by = fields.Many2one('res.users')
     hide_submit = fields.Boolean(compute='_compute_hide_submit')
     total_by_currency = fields.Html(compute='_compute_total_by_currency')
+    hide_total_currency = fields.Boolean(compute="_compute_hide_total_currency")
+
+
+
+    @api.depends('state')
+    def _compute_hide_total_currency(self):
+        totals = self.compute_total_by_currency().items()
+        print('>>>>>>>>>>>>>>>>>>')
+        print(totals)
+        print('>>>>>>>>>>>>>>>>>>')
+        for record in self:
+            record.hide_total_currency = len(totals) <= 0
+            
 
     @api.depends('amount', 'currency_id', 'state')
     def _compute_total_by_currency(self):
