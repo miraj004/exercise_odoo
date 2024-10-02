@@ -1,0 +1,1 @@
+/home/matiullah/Documents/builds/odoo-instances/odoo-17.0/odoo-bin --addons-path=/home/matiullah/workspace/enterprise/odoo-17.0-enterprise/odoo/addons,/home/matiullah/workspace/projects/excercise -d empdb -u nl_employee_ems --dev xml

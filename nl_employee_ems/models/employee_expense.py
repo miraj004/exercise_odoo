@@ -1,6 +1,8 @@
 import requests
 from collections import defaultdict
 from odoo import models, fields, api
+from colorama import init,  Fore, Back, Style
+init(autoreset=True)
 
 
 class EmployeeExpense(models.Model):
@@ -34,9 +36,8 @@ class EmployeeExpense(models.Model):
     approved_by = fields.Many2one('res.users')
     hide_submit = fields.Boolean(compute='_compute_hide_submit')
     total_by_currency = fields.Html(compute='_compute_total_by_currency')
-    hide_total_currency = fields.Boolean(compute="_compute_hide_total_currency")
-
-
+    hide_total_currency = fields.Boolean(
+        compute="_compute_hide_total_currency")
 
     @api.depends('state')
     def _compute_hide_total_currency(self):
@@ -46,7 +47,6 @@ class EmployeeExpense(models.Model):
         print('>>>>>>>>>>>>>>>>>>')
         for record in self:
             record.hide_total_currency = len(totals) <= 0
-            
 
     @api.depends('amount', 'currency_id', 'state')
     def _compute_total_by_currency(self):
@@ -110,3 +110,16 @@ class EmployeeExpense(models.Model):
 
     def action_reject(self):
         self.state = 'rejected'
+
+    @api.model
+    def send_monthly_expense_report(self):
+        print(Fore.BLACK + 'Sending Email.... at:', fields.Date.today())
+        template_id = self.env.ref('nl_employee_ems.email_template_monthly_expense_report').id
+        self.env['mail.template'].browse(template_id).sudo().send_mail(self.id, force_send=True)
+        print(Back.YELLOW + 'Email Sent! by cron job.')
+        
+            
+        # managers = self.env['hr.department'].mapped('manager_id')
+        # template_id = self.env.ref(
+        #     'nl_employee_ems.email_template_monthly_expense_report').id
+        # self.env['mail.template'].browse(template_id).send_mail(self.id, force_send=True)

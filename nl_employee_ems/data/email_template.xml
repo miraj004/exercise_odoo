@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="email_template_monthly_expense_report" model="mail.template">
+        <field name="name">Employee Expense Report</field>
+        <field name="model_id" ref="model_employee_expense"/>
+        <field name="subject">Monthly Expense Report</field>
+        <field name="email_from">{{'miraj.cei@gmail.com'}}</field>
+        <field name="email_to">{{'kj4422878@gmail.com'}}</field>
+        <field name="lang">{{ object.employee_id.lang }}</field>
+        <field name="body_html" type="html">
+            <p>Dear Manager,</p>
+            <p>This is a reminder that you to find out expense total: </p>
+            <t t-out="object.total_by_currency"/>
+        </field>
+    </record>
+</odoo>
